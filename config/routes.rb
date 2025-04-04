@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  post "signup" => "users#create"
+
   resources :follows
 
   resources :posts do

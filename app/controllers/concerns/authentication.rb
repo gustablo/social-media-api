@@ -1,5 +1,3 @@
-require_relative "./jwt_handler"
-
 module Authentication
   extend ActiveSupport::Concern
   include JwtHandler 
