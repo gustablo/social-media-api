@@ -2,7 +2,7 @@ require_relative "./jwt_handler"
 
 module Authentication
   extend ActiveSupport::Concern
-  include JWTHandler
+  include JwtHandler 
 
   included do
     before_action :require_authentication

@@ -1,6 +1,6 @@
 require "jwt"
 
-module JWTHandler
+module JwtHandler 
   extend ActiveSupport::Concern
 
   def encode(session)
@@ -15,7 +15,7 @@ module JWTHandler
       Session.find(session_id)
     rescue JWT::DecodeError
       nil
-    rescue StandardError => e
+    rescue StandardError
       nil
     end
   end
