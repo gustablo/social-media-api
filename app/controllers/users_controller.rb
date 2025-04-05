@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   allow_unauthenticated_access only: %i[ create ]
+  before_action :set_post, only: %i[ show ]
 
   def create
     begin
@@ -18,7 +19,15 @@ class UsersController < ApplicationController
     end
   end
 
+  def show
+    render json: @user
+  end
+
   private
+
+  def set_user
+    @user = User.find params.expect(:id)
+  end
 
   def user_params
     params.expect(user: [ :email_address, :password, :password_confirmation ])

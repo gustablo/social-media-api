@@ -1,7 +1,7 @@
 class CommentsController < ApplicationController
-  before_action :set_comment, only: %i[ show update destroy ]
+  before_action :set_comment, only: %i[ show destroy ]
   before_action :set_post, only: %i[ index create ]
-  before_action :require_post_ownership, only: %i[ update destroy ]
+  before_action :require_post_ownership, only: %i[ destroy ]
 
   # GET /posts/1/comments
   def index
@@ -17,19 +17,10 @@ class CommentsController < ApplicationController
 
   # POST /posts/1/comments
   def create
-    @comment = @post.comments.new(comment_params)
+    @comment = @post.add_comment(Current.user, comment_params[:content])
 
     if @comment.save
-      render json: @comment, status: :created, location: @comment
-    else
-      render json: @comment.errors, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /posts/1/comments/1
-  def update
-    if @comment.update(comment_params)
-      render json: @comment
+      render json: @comment, status: :created
     else
       render json: @comment.errors, status: :unprocessable_entity
     end
@@ -38,6 +29,20 @@ class CommentsController < ApplicationController
   # DELETE /posts/1/comments/1
   def destroy
     @comment.destroy!
+  end
+
+  def like
+    unless %w[ ADD REMOVE ].include?(like_params)
+      render json: { error: "invalid type" }, status: :bad_request
+      return
+    end
+
+    case like_params[:action]
+    when "REMOVE"
+      @comment.remove_like(Current.user)
+    when "ADD"
+      @comment.add_like(Current.user)
+    end
   end
 
   private
@@ -53,6 +58,10 @@ class CommentsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def comment_params
       params.expect(comment: [ :content, :post_id ]).merge(user_id: Current.user.id)
+    end
+
+    def like_params
+      params.expect(:type)
     end
 
     def require_post_ownership

@@ -1,10 +1,14 @@
 Rails.application.routes.draw do
   post "signup" => "users#create"
+  resources :users, only: %i[ show ]
 
   resources :follows
 
-  resources :posts do
-    resources :comments
+  resources :posts, except: %i[ update ] do
+    patch "/likes" => "posts#like"
+    resources :comments, except: %i[ update ] do
+      patch "/likes" => "comments#like"
+    end
   end
 
   resource :session

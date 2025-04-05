@@ -11,7 +11,7 @@ class FollowsController < ApplicationController
     @follow = Follow.new(follow_params)
 
     if @follow.save
-      render json: @follow, status: :created, location: @follow
+      render json: @follow, status: :created
     else
       render json: @follow.errors, status: :unprocessable_entity
     end
@@ -25,7 +25,7 @@ class FollowsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_follow
-      @follow = Follow.find(params.expect(:id))
+      @follow = Follow.find_by(followed_id: params.expect(:id), follower_id: Current.user.id)
     end
 
     # Only allow a list of trusted parameters through.

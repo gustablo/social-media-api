@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: %i[ show update destroy ]
-  before_action :require_post_ownership, only: %i[ update destroy ]
+  before_action :set_post, only: %i[ show destroy ]
+  before_action :require_post_ownership, only: %i[ destroy ]
 
   # GET /posts
   def index
@@ -22,16 +22,7 @@ class PostsController < ApplicationController
     @post = Post.new(post_params)
 
     if @post.save
-      render json: @post, status: :created, location: @post
-    else
-      render json: @post.errors, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /posts/1
-  def update
-    if @post.update(post_params)
-      render json: @post
+      render json: @post, status: :created
     else
       render json: @post.errors, status: :unprocessable_entity
     end
@@ -40,6 +31,32 @@ class PostsController < ApplicationController
   # DELETE /posts/1
   def destroy
     @post.destroy!
+  end
+
+  def like
+    unless %w[ ADD REMOVE ].include?(like_params)
+      render json: { error: "invalid type" }, status: :bad_request
+      return
+    end
+
+    case like_params
+    when "REMOVE"
+      @post.remove_like(Current.user)
+    when "ADD"
+      @post.add_like(Current.user)
+    end
+
+    head :ok
+  end
+
+  def share
+    original_post = Post.find params.expect(:id)
+
+    if original_post.share(Current.user)
+      head :ok
+    else
+      render json: { error: "Failed to share" }, status: :unprocessable_entity
+    end
   end
 
   private
@@ -51,6 +68,10 @@ class PostsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def post_params
       params.expect(post: [ :body ]).merge(user_id: Current.user.id)
+    end
+
+    def like_params
+      params.expect(:type)
     end
 
     def require_post_ownership
