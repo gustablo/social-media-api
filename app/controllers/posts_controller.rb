@@ -8,7 +8,15 @@ class PostsController < ApplicationController
     following_ids = user.following.pluck(:followed_id)
     following_ids << user.id
 
-    @posts = Post.where(user_id: following_ids).order_by(created_at: :desc)
+    @posts = Post
+      .left_outer_joins(:likes)
+      .select(
+        "posts.*",
+        "COUNT(CASE WHEN likes.user_id = #{Current.user.id} THEN 1 END) > 0 AS liked_by_current_user"
+      )
+      .where(user_id: following_ids)
+      .group("posts.id")
+
     render json: @posts
   end
 
