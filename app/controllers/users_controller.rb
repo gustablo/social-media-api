@@ -19,6 +19,7 @@ class UsersController < ApplicationController
     end
   end
 
+  # add serializible aqui
   def show
     render json: @user
   end
