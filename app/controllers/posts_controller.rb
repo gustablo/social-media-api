@@ -40,6 +40,8 @@ class PostsController < ApplicationController
       return
     end
 
+    @post = Post.find params.expect(:post_id)
+
     case like_params
     when "REMOVE"
       @post.remove_like(Current.user)
