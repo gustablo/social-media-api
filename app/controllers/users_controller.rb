@@ -3,7 +3,6 @@ class UsersController < ApplicationController
   before_action :set_post, only: %i[ show ]
 
   def create
-    begin
     @user = User.new(user_params)
     if @user.password != @user.password_confirmation
       render json: { error: "Password confirmation doesn't match Password" }, status: :unprocessable_entity
@@ -13,9 +12,6 @@ class UsersController < ApplicationController
       render json: @user, status: :created
     else
       render json: @user.errors, status: :unprocessable_entity
-    end
-    rescue StandardError
-      render json: { error: "Error signin up" }, status: :unprocessable_entity
     end
   end
 
@@ -27,10 +23,10 @@ class UsersController < ApplicationController
   private
 
   def set_user
-    @user = User.find params.expect(:id)
+    @user = User.find params.expect(:nickname)
   end
 
   def user_params
-    params.expect(user: [ :email_address, :password, :password_confirmation ])
+    params.expect(user: [ :email_address, :password, :password_confirmation, :nickname ])
   end
 end

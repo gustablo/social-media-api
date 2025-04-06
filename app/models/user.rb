@@ -8,4 +8,10 @@ class User < ApplicationRecord
   has_many :following, class_name: "Follow", foreign_key: "follower_id", dependent: :destroy
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
+
+  validates :nickname, uniqueness: true
+
+  def as_json(options = {})
+    super(only: %i[ id email_address nickname ])
+  end
 end

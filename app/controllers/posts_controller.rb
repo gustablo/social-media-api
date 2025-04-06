@@ -8,14 +8,7 @@ class PostsController < ApplicationController
     following_ids = user.following.pluck(:followed_id)
     following_ids << user.id
 
-    @posts = Post
-      .left_outer_joins(:likes)
-      .select(
-        "posts.*",
-        "COUNT(CASE WHEN likes.user_id = #{Current.user.id} THEN 1 END) > 0 AS liked_by_current_user"
-      )
-      .where(user_id: following_ids)
-      .group("posts.id")
+    @posts = Post.where(user_id: following_ids)
 
     render json: @posts
   end
@@ -43,7 +36,7 @@ class PostsController < ApplicationController
 
   def like
     unless %w[ ADD REMOVE ].include?(like_params)
-      render json: { error: "invalid type" }, status: :bad_request
+      render json: { error: "Invalid type" }, status: :bad_request
       return
     end
 
