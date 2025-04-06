@@ -5,7 +5,7 @@ class Comment < ApplicationRecord
   include Likeable
 
   def as_json(options = {})
-    super(only: %i[ id created_at content ])
+    super(only: %i[ id created_at content likes_count ])
       .merge(user: user)
   end
 end
