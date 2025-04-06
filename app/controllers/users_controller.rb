@@ -15,6 +15,10 @@ class UsersController < ApplicationController
     end
   end
 
+  def index
+    render json: User.where("nickname: ?", User.sanitize_sql_like("%#{params[:search]}%"))
+  end
+
   def show
     render json: @user
   end

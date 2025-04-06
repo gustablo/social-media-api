@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   post "signup" => "users#create"
-  resources :users, only: %i[ show ]
+  resources :users, only: %i[ show index ]
 
   resources :follows
 
