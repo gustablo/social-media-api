@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   allow_unauthenticated_access only: %i[ create ]
-  before_action :set_post, only: %i[ show ]
+  before_action :set_user, only: %i[ show ]
 
   def create
     @user = User.new(user_params)
@@ -16,7 +16,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    render json: User.where("nickname: ?", User.sanitize_sql_like("%#{params[:search]}%"))
+    render json: User.where("nickname LIKE ?", params[:search] + "%")
   end
 
   def show
