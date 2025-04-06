@@ -15,7 +15,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # add serializible aqui
   def show
     render json: @user
   end
@@ -23,7 +22,7 @@ class UsersController < ApplicationController
   private
 
   def set_user
-    @user = User.find params.expect(:nickname)
+    @user = User.find_by(nickname: params.expect(:id))
   end
 
   def user_params
