@@ -21,9 +21,9 @@ class UsersController < ApplicationController
 
   def show
     is_following = false
-    if Current.user.id != params.expect(:id)
+    if Current.user.id != @user.id
       is_following = Follow
-        .where(followed_id: params.expect(:id), follower_id: Current.user.id)
+        .where(followed_id: @user.id, follower_id: Current.user.id)
         .exists?
     end
 
