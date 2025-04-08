@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   post "signup" => "users#create"
-  resources :users, only: %i[ show index ] do
+  resources :users, only: %i[ show index update ] do
     get "/posts" => "users#posts"
     get "/followers" => "users#followers"
   end

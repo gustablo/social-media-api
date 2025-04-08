@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   allow_unauthenticated_access only: %i[ create ]
-  before_action :set_user, only: %i[ show ]
+  before_action :set_user, only: %i[ show update ]
 
   def create
     @user = User.new(user_params)
@@ -10,6 +10,13 @@ class UsersController < ApplicationController
 
     if @user.save
       render json: @user, status: :created
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    if @user.update(user_params.except(:password))
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -40,6 +47,6 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.expect(user: [ :email_address, :password, :password_confirmation, :nickname ])
+    params.expect(user: [ :email_address, :password, :password_confirmation, :nickname, :profile_picture, :cover_picture ])
   end
 end

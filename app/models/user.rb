@@ -13,7 +13,7 @@ class User < ApplicationRecord
   validates :nickname, uniqueness: true
 
   def as_json(options = {})
-    super(only: %i[ id email_address nickname ])
+    super(only: %i[ id email_address nickname profile_picture cover_picture ])
       .merge(following_count: following.count)
       .merge(followers_count: followers.count)
       .merge(is_following: is_following)
