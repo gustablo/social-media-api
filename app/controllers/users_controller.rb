@@ -28,6 +28,11 @@ class UsersController < ApplicationController
     render json: @user.posts.order(id: :desc)
   end
 
+  def followers
+    @user = User.find_by(nickname: params.expect(:user_id))
+    render json: @user.followers
+  end
+
   private
 
   def set_user
