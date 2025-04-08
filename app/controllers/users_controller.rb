@@ -38,14 +38,14 @@ class UsersController < ApplicationController
 
   def followers
     users = @user.followers.map do |u|
-      u.user
+      u.follower
     end
     render json: users
   end
 
   def following
     users = @user.following.map do |u|
-      u.user
+      u.followed
     end
     render json: users
   end
