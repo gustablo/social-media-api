@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   allow_unauthenticated_access only: %i[ create ]
-  before_action :set_user, only: %i[ show update ]
+  before_action :set_user, only: %i[ show update followers following ]
 
   def create
     @user = User.new(user_params)
@@ -16,7 +16,6 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find params.expect(:id)
     if @user.update(user_params.except(:password))
       render json: @user, status: :ok
     else
@@ -38,19 +37,21 @@ class UsersController < ApplicationController
   end
 
   def followers
-    @user = User.find params.expect(:user_id)
     render json: @user.followers
   end
 
   def following
-    @user = User.find params.expect(:user_id)
     render json: @user.following
   end
 
   private
 
   def set_user
-    @user = User.find_by(nickname: params.expect(:id))
+    @user = User.find_by(nickname: params[:id] || params[:user_id])
+
+    if @user.nil?
+      head :not_found
+    end
   end
 
   def user_params
