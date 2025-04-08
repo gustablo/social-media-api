@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :follows
 
   resources :posts, except: %i[ update ] do
+    post "/share" => "posts#share"
     patch "/likes" => "posts#like"
     resources :comments, except: %i[ update ] do
       patch "/likes" => "comments#like"

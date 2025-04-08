@@ -20,7 +20,14 @@ class UsersController < ApplicationController
   end
 
   def show
-    render json: @user
+    is_following = false
+    if Current.user.id != params.expect(:id)
+      is_following = Follow
+        .where(followed_id: params.expect(:id), follower_id: Current.user.id)
+        .exists?
+    end
+
+    render json: @user.merge(is_following: is_following)
   end
 
   def posts

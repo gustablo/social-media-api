@@ -53,7 +53,7 @@ class PostsController < ApplicationController
   end
 
   def share
-    original_post = Post.find params.expect(:id)
+    original_post = Post.find params.expect(:post_id)
 
     if original_post.share(Current.user)
       head :ok
