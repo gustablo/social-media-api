@@ -20,6 +20,7 @@ class User < ApplicationRecord
   end
 
   def is_following
+    return false unless id
     if Current.user.id != id
       return Follow
         .where(followed_id: id, follower_id: Current.user.id)
