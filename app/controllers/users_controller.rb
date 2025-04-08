@@ -37,11 +37,17 @@ class UsersController < ApplicationController
   end
 
   def followers
-    render json: @user.followers
+    users = @user.followers.map do |u|
+      u.user
+    end
+    render json: users
   end
 
   def following
-    render json: @user.following
+    users = @user.following.map do |u|
+      u.user
+    end
+    render json: users
   end
 
   private
