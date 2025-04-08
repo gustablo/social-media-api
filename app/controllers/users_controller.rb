@@ -38,8 +38,13 @@ class UsersController < ApplicationController
   end
 
   def followers
-    @user = User.find_by(nickname: params.expect(:user_id))
+    @user = User.find params.expect(:user_id)
     render json: @user.followers
+  end
+
+  def following
+    @user = User.find params.expect(:user_id)
+    render json: @user.following
   end
 
   private

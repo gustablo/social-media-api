@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :users, only: %i[ show index update ] do
     get "/posts" => "users#posts"
     get "/followers" => "users#followers"
+    get "/following" => "users#following"
   end
 
   resources :follows
