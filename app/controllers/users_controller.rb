@@ -16,7 +16,9 @@ class UsersController < ApplicationController
   end
 
   def update
+    @user = User.find params.expect(:id)
     if @user.update(user_params.except(:password))
+      render json: @user, status: :ok
     else
       render json: @user.errors, status: :unprocessable_entity
     end
