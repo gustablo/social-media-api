@@ -16,5 +16,16 @@ class User < ApplicationRecord
     super(only: %i[ id email_address nickname ])
       .merge(following_count: following.count)
       .merge(followers_count: followers.count)
+      .merge(is_following: is_following)
+  end
+
+  def is_following
+    if Current.user.id != id
+      return Follow
+        .where(followed_id: id, follower_id: Current.user.id)
+        .exists?
+    end
+
+    false
   end
 end
