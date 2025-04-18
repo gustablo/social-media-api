@@ -2,6 +2,7 @@ class Post < ApplicationRecord
   has_many_attached :images
   belongs_to :user
   has_many :comments, dependent: :destroy
+  has_one :parent_post, class_name: "Post", foreign_key: "parent_post_id"
   include Likeable
   include Shareable
   include Commentable
@@ -13,6 +14,7 @@ class Post < ApplicationRecord
       .merge(user: user.as_json)
       .merge(liked_by_current_user: liked_by_current_user)
       .merge(images: images_urls)
+      .merge(parent_post: parent_post)
   end
 
   def liked_by_current_user
