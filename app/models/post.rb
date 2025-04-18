@@ -2,7 +2,7 @@ class Post < ApplicationRecord
   has_many_attached :images
   belongs_to :user
   has_many :comments, dependent: :destroy
-  belongs_to :parent_post, class_name: "Post"
+  belongs_to :parent_post, class_name: "Post", optional: true
   has_many :childrens, class_name: "Post", foreign_key: "parent_post_id"
   include Likeable
   include Shareable
