@@ -70,7 +70,7 @@ class PostsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def post_params
-      params.expect(post: [ :body ]).merge(user_id: Current.user.id)
+      params.expect(post: [ :body, images: [] ]).merge(user_id: Current.user.id)
     end
 
     def like_params

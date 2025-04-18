@@ -5,6 +5,7 @@ class SessionsController < ApplicationController
   def create
     if user = User.authenticate_by(params.permit(:email_address, :password))
       token = start_new_session_for user
+      @user = user.reload
       render json: { token: token, user: user.reload }, status: :created
     else
       render json: { error: "Invalid email address or password." }, status: :unauthorized
