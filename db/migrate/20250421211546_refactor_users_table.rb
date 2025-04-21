@@ -3,7 +3,7 @@ class RefactorUsersTable < ActiveRecord::Migration[8.0]
     remove_column :users, :cover_picture
     remove_column :users, :profile_picture
 
-    add_column :users, :name, :string, null: false
+    add_column :users, :name, :string
     add_column :users, :bio, :string
   end
 end
