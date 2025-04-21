@@ -15,12 +15,12 @@ class User < ApplicationRecord
   validates :nickname, uniqueness: true
 
   def as_json(options = {})
-    super(only: %i[ id email_address nickname ])
+    super(only: %i[ id email_address nickname name bio ])
       .merge(following_count: following.count)
       .merge(followers_count: followers.count)
       .merge(is_following: is_following)
-      .merge(cover_picture: Rails.application.routes.url_helpers.url_for(cover_picture))
-      .merge(profile_picture: Rails.application.routes.url_helpers.url_for(profile_picture))
+      .merge(cover_picture: cover_picture.present? ? Rails.application.routes.url_helpers.url_for(cover_picture) : nil)
+      .merge(profile_picture: profile_picture.present? ? Rails.application.routes.url_helpers.url_for(profile_picture) : nil)
   end
 
   def is_following

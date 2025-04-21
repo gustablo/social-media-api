@@ -1,5 +1,5 @@
 class Post < ApplicationRecord
-  has_many_attached :images
+  has_many_attached :attachments
   belongs_to :user
   has_many :comments, dependent: :destroy
   belongs_to :parent_post, class_name: "Post", optional: true
@@ -15,7 +15,7 @@ class Post < ApplicationRecord
       .merge(user: user.as_json)
       .merge(liked_by_current_user: liked_by_current_user)
       .merge(shared_by_current_user: shared_by_current_user)
-      .merge(images: images_urls)
+      .merge(attachments_urls: attachments_urls)
       .merge(parent_post: parent_post)
   end
 
@@ -33,7 +33,7 @@ class Post < ApplicationRecord
     end
   end
 
-  def images_urls
-    images.map { |img| Rails.application.routes.url_helpers.url_for(img) }
+  def attachments_urls
+    attachments.map { |attachment| Rails.application.routes.url_helpers.url_for(attachment) }
   end
 end
