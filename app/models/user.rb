@@ -19,8 +19,8 @@ class User < ApplicationRecord
       .merge(following_count: following.count)
       .merge(followers_count: followers.count)
       .merge(is_following: is_following)
-      .merge(cover_picture: cover_picture)
-      .merge(profile_picture: profile_picture)
+      .merge(cover_picture: Rails.application.routes.url_helpers.url_for(cover_picture))
+      .merge(profile_picture: Rails.application.routes.url_helpers.url_for(profile_picture))
   end
 
   def is_following
