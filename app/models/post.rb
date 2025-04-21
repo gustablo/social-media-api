@@ -8,7 +8,7 @@ class Post < ApplicationRecord
   include Shareable
   include Commentable
 
-  validate :images_count_within_limit
+  validate :attachments_count_within_limit
 
   def as_json(options = {})
     super(only: %i[ id body created_at likes_count shares_count comments_count ])
@@ -27,8 +27,8 @@ class Post < ApplicationRecord
     Post.where(user: Current.user, parent_post_id: self.id).exists?
   end
 
-  def images_count_within_limit
-    if images.attachments.size > 4
+  def attachments_count_within_limit
+    if attachments.attachments.size > 4
       errors.add(:images, "max of 4 images")
     end
   end
