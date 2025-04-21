@@ -4,6 +4,8 @@ class User < ApplicationRecord
   has_many :posts
   has_many :comments, dependent: :destroy
   has_many :likes
+  has_one_attached :profile_picture
+  has_one_attached :cover_picture
 
   has_many :following, class_name: "Follow", foreign_key: "follower_id", dependent: :destroy
   has_many :followers, class_name: "Follow", foreign_key: "followed_id", dependent: :destroy
@@ -13,10 +15,12 @@ class User < ApplicationRecord
   validates :nickname, uniqueness: true
 
   def as_json(options = {})
-    super(only: %i[ id email_address nickname profile_picture cover_picture ])
+    super(only: %i[ id email_address nickname ])
       .merge(following_count: following.count)
       .merge(followers_count: followers.count)
       .merge(is_following: is_following)
+      .merge(cover_picture: cover_picture)
+      .merge(profile_picture: profile_picture)
   end
 
   def is_following

@@ -14,12 +14,17 @@ class Post < ApplicationRecord
     super(only: %i[ id body created_at likes_count shares_count comments_count ])
       .merge(user: user.as_json)
       .merge(liked_by_current_user: liked_by_current_user)
+      .merge(shared_by_current_user: shared_by_current_user)
       .merge(images: images_urls)
       .merge(parent_post: parent_post)
   end
 
   def liked_by_current_user
     Like.where(likeable: self, user: Current.user).exists?
+  end
+
+  def shared_by_current_user
+    Post.where(user: Current.user, parent_post_id: self.id).exists?
   end
 
   def images_count_within_limit
