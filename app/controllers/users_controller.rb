@@ -16,6 +16,11 @@ class UsersController < ApplicationController
   end
 
   def update
+    if @user.id != Current.user.id
+      head :forbidden
+      return
+    end
+
     if @user.update(user_params.except(:password))
       render json: @user, status: :ok
     else
