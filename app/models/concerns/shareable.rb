@@ -10,6 +10,8 @@ module Shareable
     if new_shareable.save
       self.shares_count = shares_count + 1
       save
+
+      new_shareable
     end
   end
 

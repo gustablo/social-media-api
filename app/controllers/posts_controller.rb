@@ -62,8 +62,9 @@ class PostsController < ApplicationController
 
   def share
     original_post = Post.find params.expect(:post_id)
-    if original_post.share(post_params)
-      head :ok
+    new_post = original_post.share(post_params)
+    if new_post
+      render json: new_post, status: :ok
     else
       render json: { error: "Failed to share" }, status: :unprocessable_entity
     end
