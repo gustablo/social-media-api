@@ -14,7 +14,8 @@ class Post < ApplicationRecord
     super(only: %i[ id body created_at likes_count shares_count comments_count ])
       .merge(user: user.as_json)
       .merge(liked_by_current_user: liked_by_current_user)
-      .merge(shared_by_current_user: shared_by_current_user)
+      .merge(shared_by_current_user: shared_by_current_user.present?)
+      .merge(shared_by_current_user_post_id: shared_by_current_user&.id)
       .merge(media_files_urls: media_files_urls)
       .merge(parent_post: parent_post)
   end
@@ -24,7 +25,8 @@ class Post < ApplicationRecord
   end
 
   def shared_by_current_user
-    Post.where(user: Current.user, parent_post_id: self.id).exists?
+    shared_post = Post.where(user: Current.user, parent_post_id: self.id)
+    shared_post.first
   end
 
   def media_files_count_within_limit
