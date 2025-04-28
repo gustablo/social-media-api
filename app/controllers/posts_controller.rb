@@ -14,7 +14,7 @@ class PostsController < ApplicationController
 
     @posts = Post.where(user_id: following_ids).limit(per_page).offset(offset).order(created_at: :desc)
 
-    render json: { results: @posts.pluck(:id).as_json, next: cursor + 1 }
+    render json: { results: @posts.as_json, next: cursor + 1 }
   end
 
   # GET /posts/1
