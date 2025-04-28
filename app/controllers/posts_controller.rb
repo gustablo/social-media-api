@@ -8,11 +8,13 @@ class PostsController < ApplicationController
     following_ids = user.following.pluck(:followed_id)
     following_ids << user.id
 
+    per_page = 20
     cursor = params[:cursor].to_i || 0
+    offset = (cursor * per_page)
 
-    @posts = Post.where(user_id: following_ids).limit(20).offset(cursor).order(created_at: :desc)
+    @posts = Post.where(user_id: following_ids).limit(per_page).offset(offset).order(created_at: :desc)
 
-    render json: { results: @posts.as_json, next: cursor + 1 }
+    render json: { results: @posts.pluck(:id).as_json, next: cursor + 1 }
   end
 
   # GET /posts/1
@@ -33,7 +35,11 @@ class PostsController < ApplicationController
 
   # DELETE /posts/1
   def destroy
-    @post.destroy!
+    if @post.parent_id.present?
+      @post.unshare
+    else
+      @post.destroy!
+    end
   end
 
   def like
