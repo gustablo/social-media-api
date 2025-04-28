@@ -18,7 +18,7 @@ module Shareable
   def unshare
     original_post = Post.find(self.parent_post_id)
 
-    original_post.shares_count = shares_count - 1
+    original_post.shares_count = original_post.shares_count - 1
     original_post.save!
     destroy!
   end
