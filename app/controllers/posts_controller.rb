@@ -35,7 +35,7 @@ class PostsController < ApplicationController
 
   # DELETE /posts/1
   def destroy
-    if @post.parent_id.present?
+    if @post.parent_post_id.present?
       @post.unshare
     else
       @post.destroy!
